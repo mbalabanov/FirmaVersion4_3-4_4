@@ -1,12 +1,15 @@
 /*
  * 
- * Firma V4.2 - Verwaltung
+ * Firma V4.3 - 4.4 - Verwaltung
+ * Marin Balabanov
  * 
  */
 
 package at.bfi.projekt.firma_v4_3_4_4.complete;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Verwaltung implements Utility {
@@ -81,6 +84,9 @@ public class Verwaltung implements Utility {
 	}
 
 	/**
+	 * Wurde vom Trainer nachträglich mündlich von void auf double geändert. (Ist
+	 * mit Stand 26.Oktober noch nicht in der schriftlichen Angabe berücksichtigt.)
+	 * 
 	 * @return
 	 */
 	public double berechneSummeAlleGehaelter() {
@@ -109,6 +115,11 @@ public class Verwaltung implements Utility {
 		return bruttoBetrag - steuerBetrag;
 	};
 
+	/**
+	 * Diese Methode wird in der Angabe zu FirmaV3 und FirmaV4.3 - 4.4 verlangt.
+	 * 
+	 * @return
+	 */
 	public String ausgabe_AlleAbteilungen() {
 		String tempAusgabe = "";
 		for (Abteilung dieseAbteilung : this.firma.getAbteilungs_Liste()) {
@@ -119,12 +130,15 @@ public class Verwaltung implements Utility {
 	}
 
 	/**
-	 * @param abt_id
+	 * Diese Methode wird in der Angabe zu FirmaV3 und FirmaV4.3 - 4.4 verlangt. Der
+	 * einzige Unterschied ist die Benennung der Uebergabeparameter.
+	 * 
+	 * @param abteilungID
 	 * @return
 	 */
-	public List<Mitarbeiter> getMitarbeiterListeVonAbteilung(int abt_id) {
+	public List<Mitarbeiter> getMitarbeiterListeVonAbteilung(int abteilungID) {
 		for (Abteilung dieseAbteilung : this.firma.getAbteilungs_Liste()) {
-			if (dieseAbteilung.getId() == abt_id) {
+			if (dieseAbteilung.getId() == abteilungID) {
 				return dieseAbteilung.getMitarb_liste();
 			}
 		}
@@ -146,9 +160,35 @@ public class Verwaltung implements Utility {
 		return null;
 	}
 
-	public boolean searchAbteilung(int id) {
+	/**
+	 * Diese Methode macht genau das selbe wie die Methode
+	 * searchMitarbeiterAusFirma(). Lt. Angabe zu FirmaV4.3 - 4.4 muss diese neue
+	 * Methode trotzdem umgesetzt werden.
+	 * 
+	 * @param mitarbeiterID
+	 * @return
+	 */
+	public Mitarbeiter searchMitarbeiterInFirma(int mitarbeiterID) {
+		for (Abteilung dieseAbteilung : this.firma.getAbteilungs_Liste()) {
+			for (Mitarbeiter dieserMitarbeiter : dieseAbteilung.getMitarb_liste()) {
+				if (dieserMitarbeiter.getId() == mitarbeiterID)
+					return dieserMitarbeiter;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Diese Methode wird in der Angabe zu FirmaV3 und FirmaV4.3 - 4.4 verlangt. Der
+	 * einzige Unterschied ist die Benennung der Uebergabeparameter.
+	 * 
+	 * @param abteilungID
+	 * @return
+	 */
+	public boolean searchAbteilung(int abteilungID) {
 		for (Abteilung abteilung : firma.getAbteilungs_Liste()) {
-			if (abteilung.getId() == id) {
+			if (abteilung.getId() == abteilungID) {
 				return true;
 			}
 		}
@@ -166,8 +206,6 @@ public class Verwaltung implements Utility {
 	}
 
 	/**
-	 * Diese
-	 * 
 	 * @param mitarbeiterListe
 	 */
 	public String ausgabeMitarbeiterListe(List<Mitarbeiter> dieseMitarbeiterListe) {
@@ -214,12 +252,33 @@ public class Verwaltung implements Utility {
 		return anzahlArbeiter;
 	}
 
+	public void sortMitarbeiterNachNamen() {
+		if (mitarbeiter_Liste.isEmpty()) {
+			System.out.println("Error: Ihre Mitarbeiterliste ist leer!");
+			return;
+		}
+
+		Collections.sort(getMitarbeiter_Liste(), (ersterMitarbeiter, zweiterMitarbeiter) -> ersterMitarbeiter.getName()
+				.compareTo(zweiterMitarbeiter.getName()));
+
+	}
+
+	public void sortMitarbeiterNachGehalt() {
+		if (mitarbeiter_Liste.isEmpty()) {
+			System.out.println("Error: Ihre Mitarbeiterliste ist leer!");
+			return;
+		}
+
+		mitarbeiter_Liste.sort(Comparator.comparingDouble(Mitarbeiter::berechneBrutto));
+
+	}
+
 	public List<Abteilung> getAbteilungs_Liste() {
 		return abteilungs_Liste;
 	}
 
 	public void setAbteilungs_Liste(List<Abteilung> abteilungs_Liste) {
-		abteilungs_Liste = abteilungs_Liste;
+		this.abteilungs_Liste = abteilungs_Liste;
 	}
 
 	public List<Mitarbeiter> getMitarbeiter_Liste() {
@@ -227,7 +286,7 @@ public class Verwaltung implements Utility {
 	}
 
 	public void setMitarbeiter_Liste(List<Mitarbeiter> mitarbeiter_Liste) {
-		mitarbeiter_Liste = mitarbeiter_Liste;
+		this.mitarbeiter_Liste = mitarbeiter_Liste;
 	};
 
 	public Firma getFirma() {

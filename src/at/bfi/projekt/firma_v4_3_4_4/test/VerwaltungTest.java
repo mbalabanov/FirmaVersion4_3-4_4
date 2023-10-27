@@ -1,3 +1,10 @@
+/*
+ * 
+ * Firma V4.3 - 4.4 - Tests fuer Verwaltung
+ * Marin Balabanov
+ * 
+ */
+
 package at.bfi.projekt.firma_v4_3_4_4.test;
 
 import static org.junit.Assert.assertNull;
@@ -8,8 +15,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import at.bfi.projekt.firma_v4_3_4_4.complete.Angestellter;
@@ -21,16 +26,6 @@ class VerwaltungTest {
 
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final PrintStream originalOut = System.out;
-
-	@BeforeEach
-	public void setUpStreams() {
-		System.setOut(new PrintStream(outContent));
-	}
-
-	@AfterEach
-	public void restoreStreams() {
-		System.setOut(originalOut);
-	}
 
 	@Test
 	void testGetAnzahlDerArbeiterGesamt() {
@@ -204,7 +199,7 @@ class VerwaltungTest {
 	}
 
 	@Test
-	void testSucheAbteilungsmitarbeiterNachID() {
+	void testSearchMitarbeiterAusFirma() {
 
 		// Arrange
 		Verwaltung verwaltung = new Verwaltung();
@@ -218,7 +213,7 @@ class VerwaltungTest {
 	}
 
 	@Test
-	void testSucheNullAbteilungsmitarbeiterNachID() {
+	void testSearchNullMitarbeiterAusFirma() {
 
 		// Arrange
 		Verwaltung verwaltung = new Verwaltung();
@@ -230,19 +225,121 @@ class VerwaltungTest {
 		assertNull(gefundenerMitarbeiter);
 	}
 
+	// Diese Methode macht genau das selbe wie die Methode
+	// searchMitarbeiterAusFirma(). Lt. Angabe zu FirmaV4.3 - 4.4
+	// muss diese neue Methode trotzdem umgesetzt werden.
+	@Test
+	void testSearchMitarbeiterInFirma() {
+
+		// Arrange
+		Verwaltung verwaltung = new Verwaltung();
+
+		// Act
+		Mitarbeiter gefundenerMitarbeiter = verwaltung.searchMitarbeiterInFirma(4);
+		String expectedName = "Eckehard";
+
+		// Assert
+		assertEquals(expectedName, gefundenerMitarbeiter.getName());
+	}
+
+	// Diese Methode macht genau das selbe wie die Methode
+	// searchMitarbeiterAusFirma(). Lt. Angabe zu FirmaV4.3 - 4.4
+	// muss diese neue Methode trotzdem umgesetzt werden.
+	@Test
+	void testSearchNullMitarbeiterInFirma() {
+
+		// Arrange
+		Verwaltung verwaltung = new Verwaltung();
+
+		// Act
+		Mitarbeiter gefundenerMitarbeiter = verwaltung.searchMitarbeiterInFirma(13);
+
+		// Assert
+		assertNull(gefundenerMitarbeiter);
+	}
+
 	@Test
 	void testAusgabeMitarbeiter() {
 
 		// Arrange
+		System.setOut(new PrintStream(outContent));
 		Verwaltung verwaltung = new Verwaltung();
 		Arbeiter testArbeiter_0 = new Arbeiter(1, "Klemens", 10, 10, 10);
 
 		// Act
 		verwaltung.ausgabe(testArbeiter_0);
+		String actualOutput = outContent.toString();
 		String expectedOutput = "\nArbeiter\n========\nId: 1\nName: Klemens\nStundenlohn: 10.00\nAnzahl der Stunden: 10\nSchichtzulage: 10.00\nBrutto: 110.0\nNetto: 93.50\n";
+		System.setOut(originalOut);
 
 		// Assert
-		assertEquals(expectedOutput, outContent.toString());
+		assertEquals(expectedOutput, actualOutput);
+	}
+
+	@Test
+	void testSortMitarbeiterNachNamen() {
+
+		// Arrange
+		Verwaltung verwaltung = new Verwaltung();
+
+		// Act
+		verwaltung.sortMitarbeiterNachNamen();
+		String actualName = verwaltung.getMitarbeiter_Liste().get(1).getName();
+		String expectedName = "Barthold";
+
+		// Assert
+		assertEquals(expectedName, actualName);
+	}
+
+	@Test
+	void testSortNullMitarbeiterNachNamenListe() {
+
+		// Arrange
+		System.setOut(new PrintStream(outContent));
+		Verwaltung verwaltung = new Verwaltung();
+		verwaltung.setMitarbeiter_Liste(new ArrayList<>());
+
+		// Act
+		verwaltung.sortMitarbeiterNachNamen();
+		String actualOutput = outContent.toString();
+		String expectedOutput = "Error: Ihre Mitarbeiterliste ist leer!\n";
+		System.setOut(originalOut);
+
+		// Assert
+		assertEquals(expectedOutput, actualOutput);
+	}
+
+	@Test
+	void testSortMitarbeiterNachGehalt() {
+
+		// Arrange
+		Verwaltung verwaltung = new Verwaltung();
+
+		// Act
+		verwaltung.sortMitarbeiterNachGehalt();
+		String actualName = verwaltung.getMitarbeiter_Liste().get(1).getName();
+		String expectedName = "Loreley";
+
+		// Assert
+		assertEquals(expectedName, actualName);
+	}
+
+	@Test
+	void testSortNullMitarbeiterNachGehalt() {
+
+		// Arrange
+		System.setOut(new PrintStream(outContent));
+		Verwaltung verwaltung = new Verwaltung();
+		verwaltung.setMitarbeiter_Liste(new ArrayList<>());
+
+		// Act
+		verwaltung.sortMitarbeiterNachGehalt();
+		String actualOutput = outContent.toString();
+		String expectedOutput = "Error: Ihre Mitarbeiterliste ist leer!\n";
+		System.setOut(originalOut);
+
+		// Assert
+		assertEquals(expectedOutput, actualOutput);
 	}
 
 }

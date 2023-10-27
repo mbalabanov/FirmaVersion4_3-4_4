@@ -1,3 +1,10 @@
+/*
+ * 
+ * Firma V4.3 - 4.4 - Mitarbeiter
+ * Marin Balabanov
+ * 
+ */
+
 package at.bfi.projekt.firma_v4_3_4_4.complete;
 
 public abstract class Mitarbeiter {
